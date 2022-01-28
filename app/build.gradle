@@ -24,6 +24,9 @@ android {
         versionCode 1
         versionName "1.0"
 
+        // Thanks to defining the base url here it could be defined per build flavour
+        buildConfigField "String", "CHARACTER_API_BASE_URL", "\"https://rickandmortyapi.com/api/\""
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,10 +47,12 @@ android {
         debug {
             minifyEnabled false
             shrinkResources false
+            buildConfigField "boolean", "ENABLE_HTTP_LOGGING", "true"
             versionNameSuffix ".debug"
         }
         release {
             minifyEnabled true
+            buildConfigField "boolean", "ENABLE_HTTP_LOGGING", "false"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // adequate signingConfig goes here...
         }
