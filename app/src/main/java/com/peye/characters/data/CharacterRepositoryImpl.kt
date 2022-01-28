@@ -38,7 +38,7 @@ class CharacterRepositoryImpl(
 
     private suspend fun fetchCharactersSinglePage(pageNumber: Int) {
         val page = remoteApiService.getCharacters(pageNumber).results.map {
-            Character(it.name)
+            Character(it.name, it.status, it.location.name, it.origin.name, it.image)
         }
         inMemoryCache.addAll(page)
         characters.emit(inMemoryCache)

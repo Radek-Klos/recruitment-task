@@ -34,5 +34,15 @@
             tools:ignore="UnusedAttribute"
             tools:itemCount="16"
             tools:listitem="@layout/item_character" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:indeterminate="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:visibility="@{viewModel.loading}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

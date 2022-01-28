@@ -25,21 +25,98 @@
         android:paddingBottom="@dimen/margin_small"
         tools:ignore="RtlSymmetry">
 
+        <ImageView
+            android:id="@+id/portrait"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderDrawable="@{@drawable/ic_character_image_placeholder}"
+            app:srcUrl="@{item.portraitImageUrl}"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_character_image_placeholder" />
+
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginEnd="@dimen/margin_small"
             android:maxLines="1"
             android:singleLine="true"
             android:text="@{item.name}"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_standard"
+            android:textSize="@dimen/text_large"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/portrait"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Rick Sanchez" />
+
+        <TextView
+            android:id="@+id/status_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{item.status}"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="Alive" />
+
+        <TextView
+            android:id="@+id/last_location_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/last_location_hint"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/status_info" />
+
+        <TextView
+            android:id="@+id/last_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{item.currentLocationName}"
+            android:textSize="@dimen/text_standard"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/last_location_hint"
+            tools:text="Citadel of Ricks" />
+
+        <TextView
+            android:id="@+id/first_location_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/first_location_hint"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/last_location" />
+
+        <TextView
+            android:id="@+id/first_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{item.originLocationName}"
+            android:textSize="@dimen/text_standard"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/first_location_hint"
+            tools:text="The Rickshank Rickdemption" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

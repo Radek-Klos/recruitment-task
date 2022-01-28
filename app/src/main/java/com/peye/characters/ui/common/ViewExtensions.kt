@@ -1,10 +1,31 @@
 package com.peye.characters.ui.common
 
+import android.graphics.drawable.Drawable
+import android.view.View
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 private const val NEAR_END_ELEMENTS_THRESHOLD = 5
+
+@BindingAdapter("visibility")
+fun View.setVisibility(visible: Boolean) {
+    visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("srcUrl", "placeholderDrawable", requireAll = true)
+fun ImageView.setImageFromUrl(srcUrl: String?, placeholder: Drawable) {
+    srcUrl?.let { url ->
+        Glide
+            .with(context)
+            .load(url)
+            .centerCrop()
+            .placeholder(placeholder)
+            .into(this)
+    } ?: setImageDrawable(placeholder)
+}
 
 @BindingAdapter("onScrolledNearEnd")
 fun RecyclerView.setOnScrolledNearEndAction(action: (collectionSize: Int) -> Unit) {
