@@ -8,5 +8,20 @@
     <fragment
         android:id="@+id/CharactersDisplay"
         android:name="com.peye.characters.ui.charsdisplay.CharactersDisplayFragment"
-        tools:layout="@layout/fragment_characters_display" />
+        tools:layout="@layout/fragment_characters_display">
+
+        <action
+            android:id="@+id/toCharacterDetails"
+            app:destination="@id/CharacterDetails" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CharacterDetails"
+        android:name="com.peye.characters.ui.chardetails.CharacterDetailsFragment"
+        tools:layout="@layout/fragment_character_details">
+
+        <argument
+            android:name="character"
+            app:argType="com.peye.characters.domain.entity.Character" />
+    </fragment>
 </navigation>

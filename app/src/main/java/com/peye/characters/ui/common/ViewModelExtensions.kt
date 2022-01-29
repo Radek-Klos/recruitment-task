@@ -47,12 +47,13 @@ private fun Any.getCallingMethodName(): String =
 
 /**
  * Single-Launch a block with a fallback option block in case of a launched block's failure.
+ * @see singleLaunch
  */
 @UiThread
 fun ViewModel.safeSingleLaunch(
     context: CoroutineContext = Dispatchers.Default,
-    strategy: SingleLaunchStrategy = SingleLaunchStrategy.IGNORE,
     onError: (Throwable) -> Unit,
+    strategy: SingleLaunchStrategy = SingleLaunchStrategy.IGNORE,
     block: suspend CoroutineScope.() -> Unit
 ) {
     singleLaunch(context, strategy = strategy) {

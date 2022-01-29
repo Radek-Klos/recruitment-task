@@ -24,6 +24,8 @@ class CharacterRepositoryImpl(
     override val isRequestInProgress = MutableSharedFlow<Boolean>(replay = 1)
 
     override suspend fun getCharactersStream(): Flow<List<Character>> {
+        if (isLoading.getAndSet(true)) return characters
+
         lastRequestedPage = STARTING_PAGE_INDEX
         inMemoryCache.clear()
 
@@ -46,8 +48,12 @@ class CharacterRepositoryImpl(
 
     override suspend fun seekMoreCharactersIfAvailable() {
         if (isLoading.getAndSet(true)) return
+
         isRequestInProgress.emit(isLoading.get())
-        try { fetchCharactersSinglePage(++lastRequestedPage) }
-        finally { isRequestInProgress.emit(false.also(isLoading::set)) }
+        try {
+            fetchCharactersSinglePage(++lastRequestedPage)
+        } finally {
+            isRequestInProgress.emit(false.also(isLoading::set))
+        }
     }
 }

@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlin_version = "1.6.0"
-        androidxNavigationVersion = '2.4.0'
+        androidxNavigationVersion = '2.5.0-alpha01'
     }
 
     repositories {
