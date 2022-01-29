@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -16,12 +18,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.peye.characters.R
 
-private const val DEFAULT_ACTION_BAR_TITLE_RES_ID = R.string.app_name
-
 abstract class BaseFragment<VB : ViewDataBinding> : Fragment() {
 
     protected abstract val layoutId: Int
     protected lateinit var binding: VB
+
+    @StringRes
+    protected open val actionBarTitle = R.string.app_name
 
     /**
      * Called on views' creation (and recreation!)
@@ -37,7 +40,7 @@ abstract class BaseFragment<VB : ViewDataBinding> : Fragment() {
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
-        setActionBarTitle(getString(DEFAULT_ACTION_BAR_TITLE_RES_ID))
+        setActionBarTitle(getString(actionBarTitle))
 
         return binding.root
     }
@@ -66,6 +69,10 @@ abstract class BaseFragment<VB : ViewDataBinding> : Fragment() {
 
     protected fun <T> observe(stream: LiveData<T>, observer: (event: T) -> Unit) =
         stream.observe(viewLifecycleOwner::getLifecycle, observer)
+
+    protected fun navigate(@IdRes resId: Int) {
+        findNavController().navigate(resId)
+    }
 
     protected fun navigate(directions: NavDirections, vararg extras: Pair<View, String>) {
         if (extras.isEmpty()) {

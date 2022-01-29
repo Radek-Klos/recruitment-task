@@ -13,6 +13,10 @@
         <action
             android:id="@+id/toCharacterDetails"
             app:destination="@id/CharacterDetails" />
+
+        <action
+            android:id="@+id/toCharacterCreation"
+            app:destination="@id/CharacterCreation" />
     </fragment>
 
     <fragment
@@ -23,5 +27,17 @@
         <argument
             android:name="character"
             app:argType="com.peye.characters.domain.entity.Character" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CharacterCreation"
+        android:name="com.peye.characters.ui.charcreation.CharacterCreationFragment"
+        tools:layout="@layout/fragment_character_creation">
+
+        <action
+            android:id="@+id/toCharacterDisplay"
+            app:destination="@id/CharactersDisplay"
+            app:popUpTo="@id/CharactersDisplay"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

@@ -7,6 +7,7 @@ import com.peye.characters.databinding.FragmentCharactersDisplayBinding
 import com.peye.characters.domain.entity.Character
 import com.peye.characters.ui.common.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.peye.characters.ui.charsdisplay.CharactersDisplayViewModel.Event
 
 class CharactersDisplayFragment : BaseFragment<FragmentCharactersDisplayBinding>() {
 
@@ -17,15 +18,15 @@ class CharactersDisplayFragment : BaseFragment<FragmentCharactersDisplayBinding>
     override fun bindViewModel(binding: FragmentCharactersDisplayBinding) {
         binding.viewModel = this.viewModel
 
-        navigateToCharDetailsOnRequest()
-    }
-
-    private fun navigateToCharDetailsOnRequest() {
         observe(viewModel.eventStream) { event ->
-            if (event is CharactersDisplayViewModel.Event.NavigateToCharDetails) {
-                viewModel.consumeIssuedEvent()
-                navigateToCharacterDetails(event.character, event.itsPosition)
+            when (event) {
+                null -> return@observe
+                is Event.NavigateToCharDetails ->
+                    navigateToCharacterDetails(event.character, event.itsPosition)
+                is Event.NavigateToCharCreation ->
+                    navigate(R.id.toCharacterCreation)
             }
+            viewModel.consumeIssuedEvent()
         }
     }
 

@@ -7,6 +7,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputLayout
 
 private const val NEAR_END_ELEMENTS_THRESHOLD = 5
 
@@ -44,4 +45,9 @@ fun RecyclerView.setOnScrolledNearEndAction(action: (collectionSize: Int) -> Uni
             }
         }
     })
+}
+
+@BindingAdapter("errorMessage", "errorMessageShown", requireAll = true)
+fun TextInputLayout.setErrorMessage(messageContent: String, errorMessageShown: Boolean) {
+    error = messageContent.takeIf { errorMessageShown }
 }

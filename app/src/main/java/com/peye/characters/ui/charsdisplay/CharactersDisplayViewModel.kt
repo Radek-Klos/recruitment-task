@@ -69,7 +69,13 @@ class CharactersDisplayViewModel(
         eventStream.value = null
     }
 
+    fun onAddNewCharacterClicked() = singleLaunch {
+        val navigationEvent = Event.NavigateToCharCreation
+        eventStream.postValue(navigationEvent)
+    }
+
     sealed class Event {
         data class NavigateToCharDetails(val character: Character, val itsPosition: Int) : Event()
+        object NavigateToCharCreation : Event()
     }
 }
