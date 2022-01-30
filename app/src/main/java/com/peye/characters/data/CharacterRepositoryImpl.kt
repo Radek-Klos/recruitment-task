@@ -2,6 +2,8 @@ package com.peye.characters.data
 
 import com.peye.characters.data.api.CharacterApiService
 import com.peye.characters.data.api.CharacterApiService.Companion.STARTING_PAGE_INDEX
+import com.peye.characters.data.db.dao.CharacterDao
+import com.peye.characters.data.db.entity.CharacterEntity
 import com.peye.characters.domain.CharacterRepository
 import com.peye.characters.domain.entity.Character
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 // todo refactor?
 class CharacterRepositoryImpl(
-    private val remoteApiService: CharacterApiService
+    private val remoteApiService: CharacterApiService,
+    private val characterDao: CharacterDao
 ) : CharacterRepository {
 
     private val characters = MutableSharedFlow<List<Character>>(replay = 1)
@@ -23,7 +26,7 @@ class CharacterRepositoryImpl(
 
     override val isRequestInProgress = MutableSharedFlow<Boolean>(replay = 1)
 
-    override suspend fun getCharactersStream(): Flow<List<Character>> {
+    override suspend fun getRemoteCharactersStream(): Flow<List<Character>> {
         if (isLoading.getAndSet(true)) return characters
 
         lastRequestedPage = STARTING_PAGE_INDEX
@@ -55,5 +58,17 @@ class CharacterRepositoryImpl(
         } finally {
             isRequestInProgress.emit(false.also(isLoading::set))
         }
+    }
+
+    override suspend fun getLocallyStoredCharacters(): List<Character> {
+        val characters = characterDao.getAllCharacters().map {
+            Character(it.name, it.status, it.location, it.origin)
+        }
+        return characters
+    }
+
+    override suspend fun saveCharacterLocally(character: Character) = with(character) {
+        val characterEntity = CharacterEntity(name, status, currentLocationName, originLocationName)
+        characterDao.saveCharacter(characterEntity)
     }
 }

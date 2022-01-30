@@ -34,8 +34,9 @@ class CharactersDisplayViewModel(
 
     fun loadCharacters() = safeSingleLaunch(ioDispatcher, ::onLoadingFailure, REPLACE) {
         if (loading.value == true || characters.value.isNotEmpty()) return@safeSingleLaunch
-        getCharactersUseCase.startCharactersFetching().collect {
-            characters.postValue(it.toList())
+        val charactersFromUser = getCharactersUseCase.getUserCreatedCharacters()
+        getCharactersUseCase.startCharactersFetching().collect { remoteCharacters ->
+            characters.postValue(charactersFromUser + remoteCharacters.toList())
         }
     }
 
@@ -53,10 +54,13 @@ class CharactersDisplayViewModel(
     }
 
     private fun onLoadingFailure(throwable: Throwable) {
-        Timber.d("onLoadingFailure $throwable")
+        Timber.d(throwable, "onLoadingFailure")
     }
 
     fun onCharacterClicked(clickedCharacter: Character) = singleLaunch {
+        if (clickedCharacter.portraitImageUrl == null) {
+            return@singleLaunch // Since the Details screen is mainly about zooming in on a portrait
+        }
         val clickedCharacterId = characters.value.indexOf(clickedCharacter)
         val navigationEvent = Event.NavigateToCharDetails(clickedCharacter, clickedCharacterId)
         eventStream.postValue(navigationEvent)

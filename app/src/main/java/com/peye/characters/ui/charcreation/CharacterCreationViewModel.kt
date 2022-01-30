@@ -1,5 +1,6 @@
 package com.peye.characters.ui.charcreation
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,8 @@ import com.peye.characters.ui.common.NonNullMutableLiveData
 import com.peye.characters.ui.common.safeSingleLaunch
 import com.peye.characters.ui.common.singleLaunch
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import timber.log.Timber
 
 class CharacterCreationViewModel(
@@ -15,10 +18,10 @@ class CharacterCreationViewModel(
     private val addCharacterUseCase: AddCharacterUseCase
 ) : ViewModel() {
 
-    val nameInput = MutableLiveData<String>()
-    val statusInput = MutableLiveData<String>()
-    val locationInput = MutableLiveData<String>()
-    val originInput = MutableLiveData<String>()
+    val nameInput = NonNullMutableLiveData("")
+    val statusInput = NonNullMutableLiveData("")
+    val locationInput = NonNullMutableLiveData("")
+    val originInput = NonNullMutableLiveData("")
 
     val nameInputErroneous = NonNullMutableLiveData(false)
     val statusInputErroneous = NonNullMutableLiveData(false)
@@ -29,33 +32,43 @@ class CharacterCreationViewModel(
 
     val eventStream = MutableLiveData<Event?>()
 
-    fun onSaveAndExitClicked() = singleLaunch {
+    fun onSaveAndExitClicked() = singleLaunch(Dispatchers.Main) {
         var isGoodToGo = checkInputAndSetResult(nameInput, nameInputErroneous)
         isGoodToGo = isGoodToGo and checkInputAndSetResult(statusInput, statusInputErroneous)
         isGoodToGo = isGoodToGo and checkInputAndSetResult(locationInput, locationInputErroneous)
         isGoodToGo = isGoodToGo and checkInputAndSetResult(originInput, originInputErroneous)
 
         if (isGoodToGo) {
-            saving.postValue(true)
-            eventStream.postValue(Event.NavigateBackSaveCompleted)
+            performCharSaving()
         }
     }
 
+    @MainThread
     private fun checkInputAndSetResult(
-        input: LiveData<String>,
+        inputLiveData: LiveData<String>,
         isInvalidResult: MutableLiveData<Boolean>
     ): Boolean {
-        val isInputValid = input.value.isValidInput()
-        isInvalidResult.postValue(isInputValid.not())
+        val isInputValid = inputLiveData.value.isValidInput()
+        isInvalidResult.value = isInputValid.not()
         return isInputValid
     }
 
     private suspend fun performCharSaving() = safeSingleLaunch(ioDispatcher, ::onSavingFailure) {
-        // TODO: implement (use AddCharacterUseCase)
+        saving.postValue(true)
+        delay(1_300) // Pretend we're doing some extensive work
+        addCharacterUseCase.addNewCharacter(
+            itsName = nameInput.value,
+            itsStatus = statusInput.value,
+            itsLocation = locationInput.value,
+            itsOrigin = originInput.value
+        )
+        saving.postValue(false)
+
+        eventStream.postValue(Event.NavigateBackSaveCompleted)
     }
 
     private fun onSavingFailure(throwable: Throwable) {
-        Timber.d("onSavingFailure $throwable")
+        Timber.d(throwable, "onSavingFailure")
     }
 
     private fun String?.isValidInput() =

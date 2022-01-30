@@ -7,7 +7,11 @@ interface CharacterRepository {
 
     val isRequestInProgress: Flow<Boolean>
 
-    suspend fun getCharactersStream(): Flow<List<Character>>
+    suspend fun getRemoteCharactersStream(): Flow<List<Character>>
 
     suspend fun seekMoreCharactersIfAvailable()
+
+    suspend fun getLocallyStoredCharacters(): List<Character>
+
+    suspend fun saveCharacterLocally(character: Character)
 }

@@ -9,6 +9,7 @@ plugins {
 ext {
     androidxLifecycleVersion = "2.4.0"
     koinVersion= "3.1.5"
+    roomVersion = "2.4.1"
     okhttp3Version = "4.3.1"
     retrofitVersion = "2.6.1"
     glideVersion = "4.12.0"
@@ -78,6 +79,11 @@ dependencies {
     // DI Koin components
     implementation "io.insert-koin:koin-core:$koinVersion"
     implementation "io.insert-koin:koin-android:$koinVersion"
+
+    // Room components
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     // Networking
     implementation "com.squareup.okhttp3:okhttp:$okhttp3Version"

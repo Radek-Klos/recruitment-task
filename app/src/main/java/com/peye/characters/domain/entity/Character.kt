@@ -9,5 +9,5 @@ data class Character(
     val status: String,
     val currentLocationName: String,
     val originLocationName: String,
-    val portraitImageUrl: String?
+    val portraitImageUrl: String? = null
 ) : Parcelable

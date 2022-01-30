@@ -11,10 +11,14 @@ class GetCharactersUseCase(
     val isLoading = repository.isRequestInProgress
 
     suspend fun startCharactersFetching(): Flow<List<Character>> {
-        return repository.getCharactersStream()
+        return repository.getRemoteCharactersStream()
     }
 
     suspend fun loadMoreCharactersIfPossible() {
         repository.seekMoreCharactersIfAvailable()
+    }
+
+    suspend fun getUserCreatedCharacters(): List<Character> {
+        return repository.getLocallyStoredCharacters()
     }
 }
