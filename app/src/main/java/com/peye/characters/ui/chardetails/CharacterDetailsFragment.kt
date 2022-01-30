@@ -1,5 +1,6 @@
 package com.peye.characters.ui.chardetails
 
+import android.os.Bundle
 import androidx.navigation.fragment.navArgs
 import com.peye.characters.R
 import com.peye.characters.databinding.FragmentCharacterDetailsBinding
@@ -21,5 +22,10 @@ class CharacterDetailsFragment : BaseFragment<FragmentCharacterDetailsBinding>()
         observe(viewModel.characterName) { characterName ->
             setActionBarTitle(characterName)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        postponeEnterTransition()
     }
 }

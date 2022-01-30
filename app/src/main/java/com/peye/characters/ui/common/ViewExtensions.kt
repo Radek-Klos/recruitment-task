@@ -4,10 +4,14 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.google.android.material.textfield.TextInputLayout
+import com.bumptech.glide.request.target.Target
 
 private const val NEAR_END_ELEMENTS_THRESHOLD = 5
 
@@ -18,12 +22,17 @@ fun View.setVisibility(visible: Boolean) {
 
 @BindingAdapter("srcUrl", "placeholderDrawable", requireAll = true)
 fun ImageView.setImageFromUrl(srcUrl: String?, placeholder: Drawable) {
+    val transitionStartingListener = // Support for the Shared Element Screen Transitions
+        OnResourceReadyListener { _: Drawable?, _: Any?, _: Target<Drawable>?, _: DataSource?, _: Boolean ->
+            false.also { startPostponedEnterTransition() }
+        }
     srcUrl?.let { url ->
         Glide
             .with(context)
             .load(url)
             .centerCrop()
             .placeholder(placeholder)
+            .listener(transitionStartingListener)
             .into(this)
     } ?: setImageDrawable(placeholder)
 }
@@ -50,4 +59,15 @@ fun RecyclerView.setOnScrolledNearEndAction(action: (collectionSize: Int) -> Uni
 @BindingAdapter("errorMessage", "errorMessageShown", requireAll = true)
 fun TextInputLayout.setErrorMessage(messageContent: String, errorMessageShown: Boolean) {
     error = messageContent.takeIf { errorMessageShown }
+}
+
+/**
+ * If only possible, starts postponed enter transition on a view's fragment.
+ * If the view is no longer added to any fragment, there is nothing for us to do.
+ * No need for any special reaction either to that so-called 'illegal state'.
+ */
+private fun View.startPostponedEnterTransition() {
+    try { findFragment<Fragment>().startPostponedEnterTransition() }
+    catch (ex: IllegalStateException) { } // It's thrown when fragment could not be found
+    // This is normal situation which happens eg. in a RecyclerView when scrolling
 }
