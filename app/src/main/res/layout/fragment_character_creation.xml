@@ -34,7 +34,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_large"
             android:hint="@string/input_char_name_hint"
             app:errorEnabled="true"
             app:errorMessage="@{@string/erroneous_input_hint_indicator}"

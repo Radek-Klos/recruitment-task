@@ -20,21 +20,9 @@ fun View.setVisibility(visible: Boolean) {
     visibility = if (visible) View.VISIBLE else View.GONE
 }
 
-@BindingAdapter("srcUrl", "placeholderDrawable", requireAll = true)
-fun ImageView.setImageFromUrl(srcUrl: String?, placeholder: Drawable) {
-    val transitionStartingListener = // Support for the Shared Element Screen Transitions
-        OnResourceReadyListener { _: Drawable?, _: Any?, _: Target<Drawable>?, _: DataSource?, _: Boolean ->
-            false.also { startPostponedEnterTransition() }
-        }
-    srcUrl?.let { url ->
-        Glide
-            .with(context)
-            .load(url)
-            .centerCrop()
-            .placeholder(placeholder)
-            .listener(transitionStartingListener)
-            .into(this)
-    } ?: setImageDrawable(placeholder)
+@BindingAdapter("errorMessage", "errorMessageShown", requireAll = true)
+fun TextInputLayout.setErrorMessage(messageContent: String, errorMessageShown: Boolean) {
+    error = messageContent.takeIf { errorMessageShown }
 }
 
 @BindingAdapter("onScrolledNearEnd")
@@ -56,9 +44,21 @@ fun RecyclerView.setOnScrolledNearEndAction(action: (collectionSize: Int) -> Uni
     })
 }
 
-@BindingAdapter("errorMessage", "errorMessageShown", requireAll = true)
-fun TextInputLayout.setErrorMessage(messageContent: String, errorMessageShown: Boolean) {
-    error = messageContent.takeIf { errorMessageShown }
+@BindingAdapter("srcUrl", "placeholderDrawable", requireAll = true)
+fun ImageView.setImageFromUrl(srcUrl: String?, placeholder: Drawable) {
+    val transitionStartingListener = // Support for the Shared Element Screen Transitions
+        OnResourceReadyListener { _: Drawable?, _: Any?, _: Target<Drawable>?, _: DataSource?, _: Boolean ->
+            false.also { startPostponedEnterTransition() }
+        }
+    srcUrl?.let { url ->
+        Glide
+            .with(context)
+            .load(url)
+            .centerCrop()
+            .placeholder(placeholder)
+            .listener(transitionStartingListener)
+            .into(this)
+    } ?: setImageDrawable(placeholder)
 }
 
 /**
